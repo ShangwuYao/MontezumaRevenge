@@ -36,14 +36,14 @@ env = gym.make('MontezumaRevenge-v0') # (210, 160, 3) array image
 env.reset()
 env.render()
 # action 0-17   a-r
-
+print("hello")
 for t in range(1000):
   action = ord(getChar()) - ord('a')
   print("action: ", action)
   nextstate, reward, is_terminal, debug_info = env.step(action)
   print(nextstate.shape, reward, is_terminal, debug_info)
   
-  if t == 0:
+  if action == 0:
   	np.save("image", nextstate)
 
   env.render()
