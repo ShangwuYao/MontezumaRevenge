@@ -73,12 +73,12 @@ def parse_annotation(text_dir, img_dir, labels=[]):
     
     for file_name in file_names:
         img = {'object':[]}
-        obj = {}
 
         full_textname = text_dir + '/' + file_name
-        full_imgname = img_dir + '/' + file_name.replace('txt', 'jpg')
+        full_imgname = img_dir + '/' + file_name.replace('txt', 'png') # TODO
         file_ = open(full_textname)
         for line in file_:
+            obj = {}
             obj_class, x_center, y_center, x_width, y_height = line.split()
             obj_class, x_center, y_center, x_width, y_height = int(obj_class), float(x_center), float(y_center), float(x_width), float(y_height)
             

@@ -305,7 +305,8 @@ class Inception3Feature(BaseFeatureExtractor):
 class VGG16Feature(BaseFeatureExtractor):
     """docstring for ClassName"""
     def __init__(self, input_size):
-        vgg16 = VGG16(input_shape=(input_size, input_size, 3), include_top=False)
+        # added weights='imagenet', 
+        vgg16 = VGG16(weights='imagenet', input_shape=(input_size, input_size, 3), include_top=False) 
         #vgg16.load_weights(VGG16_BACKEND_PATH)
 
         self.feature_extractor = vgg16
