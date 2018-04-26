@@ -34,8 +34,8 @@ import cv2
 from matplotlib import pyplot as plt
 
 test_dir = './test_images/'
-img1 = cv2.imread(test_dir + 'ghost2.png', 0)          # queryImage
-img2 = cv2.imread(test_dir + 'monte_stair.png', 0) # trainImage
+img1 = cv2.imread(test_dir + 'man.png', 0)          # queryImage
+img2 = cv2.imread(test_dir + 'monte.png', 0) # trainImage
 #img1 = cv2.imread(test_dir + 'pumpkin.png')          # queryImage
 #img2 = cv2.imread(test_dir + 'raccoon_pumpkin.jpeg') # trainImage
 

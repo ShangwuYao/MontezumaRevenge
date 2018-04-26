@@ -44,9 +44,6 @@ from keras.layers.merge import concatenate
 import matplotlib.pyplot as plt
 import keras.backend as K
 import tensorflow as tf
-import imgaug as ia
-from tqdm import tqdm
-from imgaug import augmenters as iaa
 import numpy as np
 import pickle
 import os, cv2
@@ -74,6 +71,8 @@ argparser.add_argument(
 	'-c',
 	'--conf',
 	help='path to configuration file')
+
+argparser.add_argument('-t', '--training', default=False, type=lambda x: (str(x).lower() == 'true'))
 
 def _main_(args):
 
@@ -135,34 +134,37 @@ def _main_(args):
 		print "Loading pre-trained weights in", config['train']['pretrained_weights']
 		yolo.load_weights(config['train']['pretrained_weights'])
 
+	for layer in galaxyModel.layers:
+		print(layer)
+        layer.trainable = True	
+
 	###############################
 	#   Start the training process 
 	###############################
 
-	#yolo.train(train_imgs         = train_imgs,
-	#           valid_imgs         = valid_imgs,
-	#           train_times        = config['train']['train_times'],
-	#           valid_times        = config['valid']['valid_times'],
-	#           nb_epoch           = config['train']['nb_epoch'], 
-	#           learning_rate      = config['train']['learning_rate'], 
-	#           batch_size         = config['train']['batch_size'],
-	#           warmup_epochs      = config['train']['warmup_epochs'],
-	#           object_scale       = config['train']['object_scale'],
-	#           no_object_scale    = config['train']['no_object_scale'],
-	#           coord_scale        = config['train']['coord_scale'],
-	#           class_scale        = config['train']['class_scale'],
-	#           saved_weights_name = config['train']['saved_weights_name'],
-	#           debug              = config['train']['debug'])
-
-	labels = ['joe','ladder','skull','key','door','belt','rope']
-
-	image = cv2.imread('../../test_images/train_image_folder/1.png')
+	if args.training:
+		yolo.train(train_imgs         = train_imgs,
+				   valid_imgs         = valid_imgs,
+				   train_times        = config['train']['train_times'],
+				   valid_times        = config['valid']['valid_times'],
+				   nb_epoch           = config['train']['nb_epoch'], 
+				   learning_rate      = config['train']['learning_rate'], 
+				   batch_size         = config['train']['batch_size'],
+				   warmup_epochs      = config['train']['warmup_epochs'],
+				   object_scale       = config['train']['object_scale'],
+				   no_object_scale    = config['train']['no_object_scale'],
+				   coord_scale        = config['train']['coord_scale'],
+				   class_scale        = config['train']['class_scale'],
+				   saved_weights_name = config['train']['saved_weights_name'],
+				   debug              = config['train']['debug'])
+	
+	image = cv2.imread(config['valid']['valid_image_folder'] + '/10.png')
 
 	plt.figure(figsize=(10,10))
 
 	boxes = yolo.predict(image)
 
-	image = draw_boxes(image, boxes, labels=labels)
+	image = draw_boxes(image, boxes, labels=config['model']['labels'])
 
 	plt.imshow(image[:,:,::-1]); plt.show()
 
