@@ -1,5 +1,11 @@
 *.weights
+.ipynb_checkpoints
+*.hdf5
+*.local
+*.ipynb
+*.tar
 *.h5
+save_weights/*
 *.DS_Store
 *.png
 *.jpg
@@ -7,3 +13,5 @@
 *.xml
 *.csv
 *.record
+E-DRL/*
+feudal_networks/*
