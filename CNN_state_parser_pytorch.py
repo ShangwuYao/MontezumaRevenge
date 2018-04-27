@@ -85,10 +85,12 @@ def parse_annotation(text_dir, img_dir, label_file):
 class CNNModel(torch.nn.Module):
 	'''
 	reuse some of my code from hw
+
 	scalable version of state decoder
 	could deal with increasing number of states
 
 	input: @CLASSES, number of states
+
 	input of decode_state: greyscale image of shape (1, 1, 84, 84)
 	output of decode_state: list of detected states, ['actorInRoom,room_1', 'actorOnSpot,room_1,conveyor_1']
 
