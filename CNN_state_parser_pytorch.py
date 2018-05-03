@@ -22,6 +22,7 @@ from inferno.trainers.callbacks.base import Callback
 from sklearn.model_selection import train_test_split
 import torch.nn.functional as F
 import time
+from LogicRLUtils import *
 
 
 def tuple_tostring(tuple):
@@ -101,7 +102,7 @@ class CNNModel(torch.nn.Module):
 	if more states is added, should call model.model_train() to let the network learn train first.
 	'''
 	def __init__(self, CLASSES, 
-		pretrained_model_pth='save_weights/parser_epoch_23_loss_0.0002853113460746086_valacc_0.9986979166666667.t7'):
+		pretrained_model_pth='./save_weights/parser_epoch_23_loss_0.0002853113460746086_valacc_0.9986979166666667.t7'):
 		super(CNNModel, self).__init__()
 
 		all_imgs, all_labels, LABELS, IDX_TO_LABELSTR, CLASS = parse_annotation('lev1_labeled/imgLevel1Label', 'lev1_labeled/imgLevel1Label', 'lev1_labeled/0_allpossible.txt')
@@ -129,15 +130,6 @@ class CNNModel(torch.nn.Module):
 		valid_loader = DataLoader(
 			myDataset(X_valid, y_valid), shuffle=True,
 			batch_size=args.batch_size, **kwargs)
-
-
-		# load pretrained weights
-		pretrained_dict = torch.load(pretrained_model_pth)
-		model_dict = self.state_dict()
-
-		pretrained_dict = {k: v for k, v in pretrained_dict.items() if k in model_dict}
-		model_dict.update(pretrained_dict) 
-		self.load_state_dict(model_dict)
 
 
 		# graph
@@ -189,6 +181,18 @@ class CNNModel(torch.nn.Module):
 		self.optimizer = optim.Adam(self.parameters(), lr=args.init_lr)
 		#self.optimizer = optim.RMSprop(self.parameters(), lr=args.init_lr)
 		#self.optimizer = optim.SGD(self.parameters(), lr=args.init_lr)
+
+		# load pretrained weights
+		pretrained_dict = torch.load(pretrained_model_pth)
+		model_dict = self.state_dict()
+
+		pretrained_dict = {k: v for k, v in pretrained_dict.items() if k in model_dict}
+		model_dict.update(pretrained_dict) 
+		self.load_state_dict(model_dict)
+
+		#self.load_state_dict(pretrained_dict)
+
+
 		if torch.cuda.is_available():
 			self.cuda()
 
@@ -329,9 +333,11 @@ def main():
 	CLASSES = [15]
 	model = CNNModel(CLASSES)
 	#model.model_train()
-	state = torch.Tensor(1, 1, 84, 84)
+	#state = torch.Tensor(1, 1, 84, 84)
+	state = FrameToDecoderState(np.load('errimg_0.npy'))
 	decoded_state = model.decode_state(state)
 	print("decoded state: {}".format(decoded_state))
+	#print(model)
 
 
 if __name__ == '__main__':
