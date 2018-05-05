@@ -13,5 +13,7 @@ save_weights/*
 *.xml
 *.csv
 *.record
+*.t7
 E-DRL/*
 feudal_networks/*
+*.zip
