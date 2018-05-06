@@ -45,7 +45,8 @@ class RLAgents():
 		return self.Agent_Dict[mini_task]
 
 	def feedback(self, mini_task, feedbacks):
-		pass
+		agent = self._get_agent(mini_task)
+		agent.step(feedbacks)
 
 	def execute(self, mini_task, states):
 		agent = self._get_agent(mini_task)
