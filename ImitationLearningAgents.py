@@ -120,8 +120,13 @@ class Imitation_Agent():
 						rewards should be a scala, the sum of rewards for the 4 frames
 						done should be a boolean
 		"""
-		state_images, action, _, _, _ = feedbacks
-		self.network.fit(state_images, action)
+		state_images, actions, _, _, _ = feedbacks
+
+		action_idx = actions[0] # all actions the same
+		action = np.zeros((1, self.action_cnt))
+		action[0, action_idx] = 1
+
+		self.network.train(state_images, action)
 		
 		# save network
 		self.step_cnt += 1
@@ -190,6 +195,9 @@ class PolicyNetwork():
 		model.compile(loss='categorical_crossentropy', optimizer=optimizer)
 
 		return model
+
+	def train(self, X, Y, epochs=1, verbose=0):
+		self.model.fit(X, Y, epochs=epochs, verbose=verbose)
 
 	def predict(self, state):
 
